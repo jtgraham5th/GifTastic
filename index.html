@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+<title>Title</title>
+</head>
+<body>
+<div id="display"></div>
+<div id="gifHolder"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var topics = ["iron man", "batman", "spiderman", "superman", "captain america", "flash", "hulk", "wonder woman", "thor", "aquaman", "hawkeye","green arrow", "black panther", "nightwing", "X-men", "Cyborg", "Avengers", "Justice League"];
+    topics.forEach(addButton)
+
+    function addButton(item) {
+        var newDiv = $("<button>");
+        newDiv.addClass("hero")
+        newDiv.attr("data-name", item);
+        newDiv.html(item);
+        newDiv.appendTo("#display");
+        console.log(newDiv.attr("data-name"))
+    };
+    function displayGif () {
+        var entry = $(this).attr("data-name");
+        var queryURL = "http://api.giphy.com/v1/gifs/search?api_key=9T0mTHBPxSJi0ifWO4LHF9PToG2f5oT0&q=" + entry + "&limit=25&offset=0&lang=en";
+
+        $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+        console.log(response);
+        var results = response.data
+        for (i = 0; i < results.length; i++) {
+            var gifDiv = $("<div>");
+            var rating = $("<p>").text("Rating: " + results[i].rating);
+            var gifImg = $("<img>");         
+            console.log(results[i].images.fixed_height_still.url);
+            gifImg.attr("src",results[i].images.fixed_height_still.url);
+            gifDiv.append(gifImg);
+            gifDiv.append(rating);
+            $("#gifHolder").prepend(gifDiv);
+            }
+    });
+}
+    // $("button").click(function() {
+    //       entry = $(this).attr("data-name");
+    //       console.log(entry);
+    //     //   var newGif = response.images;
+    //     //   console.log(newGif);
+    //   });
+      $(document).on("click", ".hero", displayGif);
+  </script>
+</script>
+</body>
+</html>
