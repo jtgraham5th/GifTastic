@@ -38,11 +38,21 @@
     .container {
         border: 10px solid black;
     }
+    label {
+        font-family: 'Bangers';
+    }
+    #favorites {
+        color: black;
+        font-family: 'Bangers';
+        border: 3px solid black;
+        background-image: url(mvsdcGold.jpg);
+    }
+    
     </style>
 </head>
 
 <body style="background-color: midnightblue">
-    <div class="container bg-light text-center">
+    <div class="container bg-light text-center mb-4">
         <header class="text-center mb-3" style="height:150px; background-image: url(mvsdc.jpg); background-size: cover; background-position: center">
             <h1></h1>
         </header>
@@ -50,35 +60,39 @@
         <div class="row d-flex justify-content-center">
             <div id="marvelDisplay" class="col-md-2 d-flex flex-column">
                 <form id="hero-form">
-                    <label for="marvel-input">Add a Marvel Hero</label>
+                    <label for="marvel-input" class="h5 mt-1">Add a Marvel Hero</label>
                     <input type="text" id="marvel-input" class="w-100"><br>
                     <input id="marvel-hero" type="submit" value="GO!" class="bg-success">
                 </form>
             </div>
-            <div class="gif d-flex flex-column col-md-3 align-items-center" style="width: 100px">
+            <div class=" d-flex flex-column col-md-3 align-items-center p-0" style="width: 100px">
                 <div id="marvelName" class="text-center mb-3" style="text-transform: capitalize"></div>
                 <div id="marvelGifHolder" style="height:400px; overflow-y:auto;"></div>
             </div>
             <div id="facts" class="col-md-2"></div>
-            <div class="gif d-flex flex-column col-md-3 align-items-center" style="width: 100px">
+            <div class=" d-flex flex-column col-md-3 align-items-center p-0" style="width: 100px">
                 <div id="dcName" class="text-center mb-3" style="text-transform: capitalize"></div>
                 <div id="dcGifHolder" style="height:400px; overflow-y:auto;"></div>
             </div>
             <div id="dcDisplay" class="col-md-2 d-flex flex-column">
                 <form id="hero-form">
-                    <label for="dc-input">Add a DC Hero</label>
+                    <label for="dc-input" class="h5 mt-1">Add a DC Hero</label>
                     <input type="text" id="dc-input" class="w-100"><br>
                     <input id="dc-hero" type="submit" value="GO!" class="bg-success">
                 </form>
             </div>
         </div>
-        <div id="favorites" class="row flex-nowrap mb-4 border border-success" style="overflow-x:auto; height:100px">Favorites:</div>
+        <div id="favorites" class="row flex-nowrap align-items-center" style="overflow-x:auto; height:100px"><h3>Favorites</h3>:</div>
     </div>
     <!-- <div id="gifHolder" class="d-flex" style="width: 100px;"></div> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+        var entry ;
+        var limit = 10;
+        var next = 0;
+        var universe ;
         var marvelTopics = ["Iron Man", "Spider-man", "Captain America", "Hulk", "Thor", "Hawkeye", "Black Panther"];
         var DCTopics = ["Batman", "Superman", "Flash", "Wonder Woman", "Aquaman", "Green Arrow", "Nightwing", "Cyborg"];
         marvelTopics.forEach(addMarvel)
@@ -102,27 +116,30 @@
             newDiv.appendTo("#dcDisplay");
             console.log(newDiv.attr("data-name"))
         };
-        function displayGif() {
-            var entry = $(this).attr("data-name");
-            var limit = 10;
-            var universe = $(this).attr("data-universe");
+        function setupGif() {
+            entry = $(this).attr("data-name");
+            limit = 10;
+            next = 0;
+            universe = $(this).attr("data-universe");
+            console.log(universe)
             if (universe === "dc") {
                 $("#dcGifHolder").empty();
                 $("#dcName").html("<h1>" + entry + "</h1>")
                 $("#dcAdd").empty();
-                $("<button>Add More Gifs</button>").appendTo("#dcName");
-            } else {
+                $("<button id=dc-more>Add More Gifs</button>").appendTo("#dcName");
+            } else if (universe === "marvel") {
                 $("#marvelGifHolder").empty();
                 $("#marvelName").html("<h1>" + entry + "</h1>");
                 $("#marvelAdd").empty();
-                $("<button id=#Add>Add More Gifs</button>").appendTo("#marvelName");
+                $("<button id=marvel-more>Add More Gifs</button>").appendTo("#marvelName");
             };
-            var queryURL2 = "https://superheroapi.com/api.php/10103549260780203/search/" + entry
-            var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=9T0mTHBPxSJi0ifWO4LHF9PToG2f5oT0&q=" + entry + "&limit=" + limit + "&offset=0&lang=en";
-            getInfo()
-            var next = 0
-            function getInfo() {
+            displayGif();
+            getInfo();
+            }
+            
 
+            function getInfo() {
+                var queryURL2 = "https://superheroapi.com/api.php/10103549260780203/search/" + entry
                 $.ajax({
                     url: queryURL2,
                     method: "GET"
@@ -156,19 +173,19 @@
                     });
                 });
             };
-
+            function displayGif() {
+            var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=9T0mTHBPxSJi0ifWO4LHF9PToG2f5oT0&q=" + entry + "&limit=" + limit + "&offset=0&lang=en";
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
                 console.log(response);
                 var results = response.data
-                for (i = 0; i < results.length; i++) {
+                for (i = 0; i < limit; i++) {
                     var gifDiv = $("<div>");
                     var rating = $("<p>").text("Rating: " + results[i].rating);
                     var gifImg = $("<img>");
                     var gifFav = $("<button>Favorite</button>");
-                    console.log(results[i].images.fixed_width_still.url);
                     gifImg.attr("src", results[i].images.fixed_width_still.url);
                     gifImg.attr("data-still", results[i].images.fixed_width_still.url)
                     gifImg.attr("data-animate", results[i].images.fixed_width.url)
@@ -178,10 +195,10 @@
                     rating.append(gifFav);
                     gifDiv.append(gifImg);
                     gifDiv.append(rating);
-                    console.log($(this).attr("data-universe"))
+                    console.log(universe)
                     if (universe === "dc") {
                         $("#dcGifHolder").prepend(gifDiv);
-                    } else {
+                    } else if(universe === "marvel") {
                         $("#marvelGifHolder").prepend(gifDiv);
                     };
                 }
@@ -197,29 +214,54 @@
                         $(this).attr("data-state", "still");
                     }
                     console.log(state)
+                    console.log(animate)
+                    console.log(still)
                 });
                 var favorites = []
                 $(".favorite").click(function () {
-                    favorites.push($(this).parent().siblings());
-                    localStorage.setItem("favorites", JSON.stringify(favorites));
-                    $(this).parent().siblings().clone().addClass("mh-100").appendTo("#favorites")
-                    console.log( $(this).parent())
+                    // favorites.push($(this).parent().siblings());
+                    // localStorage.setItem("favorites", JSON.stringify(favorites));
+                    var favoriteIMG = $(this).parent().siblings().attr("src");
+                    console.log(favoriteIMG);
+                    location.href = "#favorites";  
+                    $(this).parent().siblings().clone().addClass("mh-100 mr-1").appendTo("#favorites")
+                    console.log( $(this).parent().siblings)
                 });
             });
+        
+                $("#marvel-more").on("click", function (event) {
+                    event.preventDefault();
+                    limit = limit + 10;
+                    universe = "marvel";
+                    console.log(universe)    
+                    displayGif();
+                });
+                $("#dc-more").on("click", function (event) {
+                    event.preventDefault();
+                    limit = limit + 10;
+                    universe = "dc";
+                    console.log(universe)    
+                    displayGif();
+                });
+            
+                
+                
+            }       
 
-        }
+        
 
         $("#dc-hero").on("click", function (event) {
             event.preventDefault();
             var inputHero = $("#dc-input").val().trim();
             addDC(inputHero);
         });
+        
         $("#marvel-hero").on("click", function (event) {
             event.preventDefault();
             var inputHero = $("#marvel-input").val().trim();
             addMarvel(inputHero);
         });
-        $(document).on("click", ".hero", displayGif);
+        $(document).on("click", ".hero", setupGif);
     </script>
     </script>
 </body>
