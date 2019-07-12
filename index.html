@@ -7,54 +7,86 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Audiowide|Bangers|Boogaloo&display=swap" rel="stylesheet">
     <title>Title</title>
+    <style>
+    button {
+        font-family: 'Audiowide', cursive;
+    }
+    .hero {
+        background-color: darkblue;
+        color: white;
+    }
+    #facts {
+        background-color: darkred;
+        font-family: 'Bangers';
+        color: black;
+        border: 5px solid black;
+    }
+    #marvelName, #dcName {
+        font-family: 'AudioWide', cursive;
+        
+    }
+    #marvelDisplay, #dcDisplay {
+        border: 3px solid black;
+        background-color: silver;
+    }
+    .gif {
+        border-top: 3px solid black;
+        border-bottom: 3px solid black;
+    }
+    .container {
+        border: 10px solid black;
+    }
+    </style>
 </head>
 
-<body style="background-image: url(); background-size: cover">
-    <div class="container-fluid">
-        <header class="text-center">
-            <h1>giftastic</h1>
+<body style="background-color: midnightblue">
+    <div class="container bg-light text-center">
+        <header class="text-center mb-3" style="height:150px; background-image: url(mvsdc.jpg); background-size: cover; background-position: center">
+            <h1></h1>
         </header>
+        <div class="row-fluid"><h4>Select a Hero from either the Marvel or DC Universe, or add your own!<br> Choose your Favorite Gifs and read up on the stats on the hero you have chosen. Have Fun!</h4></div>
         <div class="row d-flex justify-content-center">
             <div id="marvelDisplay" class="col-md-2 d-flex flex-column">
                 <form id="hero-form">
                     <label for="marvel-input">Add a Marvel Hero</label>
-                    <input type="text" id="marvel-input"><br>
-                    <input id="marvel-hero" type="submit" value="GO!">
+                    <input type="text" id="marvel-input" class="w-100"><br>
+                    <input id="marvel-hero" type="submit" value="GO!" class="bg-success">
                 </form>
             </div>
-            <div class="d-flex flex-column col-md-3 align-items-center" style="width: 100px">
+            <div class="gif d-flex flex-column col-md-3 align-items-center" style="width: 100px">
                 <div id="marvelName" class="text-center mb-3" style="text-transform: capitalize"></div>
                 <div id="marvelGifHolder" style="height:400px; overflow-y:auto;"></div>
             </div>
-            <div id="facts" class="col-md-2 bg-primary"></div>
-            <div class="d-flex flex-column col-md-3 align-items-center" style="width: 100px">
+            <div id="facts" class="col-md-2"></div>
+            <div class="gif d-flex flex-column col-md-3 align-items-center" style="width: 100px">
                 <div id="dcName" class="text-center mb-3" style="text-transform: capitalize"></div>
                 <div id="dcGifHolder" style="height:400px; overflow-y:auto;"></div>
             </div>
             <div id="dcDisplay" class="col-md-2 d-flex flex-column">
-                <form id="hero-form" class="border">
+                <form id="hero-form">
                     <label for="dc-input">Add a DC Hero</label>
-                    <input type="text" id="dc-input"><br>
-                    <input id="dc-hero" type="submit" value="GO!">
+                    <input type="text" id="dc-input" class="w-100"><br>
+                    <input id="dc-hero" type="submit" value="GO!" class="bg-success">
                 </form>
             </div>
         </div>
-        <div id="favorites" class="row flex-nowrap mb-4" style="overflow-x:auto; height:100px">Favorites:</div>
+        <div id="favorites" class="row flex-nowrap mb-4 border border-success" style="overflow-x:auto; height:100px">Favorites:</div>
     </div>
     <!-- <div id="gifHolder" class="d-flex" style="width: 100px;"></div> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-        var marvelTopics = ["iron man", "spider-man", "captain america", "hulk", "thor", "hawkeye", "black panther", "X-men", "Avengers"];
-        var DCTopics = ["batman", "superman", "flash", "wonder woman", "aquaman", "green arrow", "nightwing", "Cyborg", "Justice League"];
+        var marvelTopics = ["Iron Man", "Spider-man", "Captain America", "Hulk", "Thor", "Hawkeye", "Black Panther"];
+        var DCTopics = ["Batman", "Superman", "Flash", "Wonder Woman", "Aquaman", "Green Arrow", "Nightwing", "Cyborg"];
         marvelTopics.forEach(addMarvel)
         DCTopics.forEach(addDC)
 
         function addMarvel(item) {
             var newDiv = $("<button>");
-            newDiv.addClass("hero")
+            newDiv.addClass("hero m-1")
             newDiv.attr("data-name", item);
             newDiv.attr("data-universe", "marvel");
             newDiv.html(item);
@@ -63,7 +95,7 @@
         };
         function addDC(item) {
             var newDiv = $("<button>");
-            newDiv.addClass("hero")
+            newDiv.addClass("hero m-1")
             newDiv.attr("data-name", item);
             newDiv.attr("data-universe", "dc");
             newDiv.html(item);
@@ -102,16 +134,17 @@
                     if (response.results.length > 1) {
                         $(nameDiv).append("<p><button id=next class=btn-sm>NEXT</button>");
                     }
-                    var identityDiv = $("<h5>").html("Real Name: " + info.biography["full-name"])
-                    var raceDiv = $("<h5>").html("Race: " + info.appearance.race)
-                    var heightDiv = $("<h5>").html("height: " + info.appearance.height[0])
-                    var weightDiv = $("<h5>").html("weight: " + info.appearance.weight[0])
-                    var residenceDiv = $("<h5>").html("Residence: " + info.work.base)
-                    var statsDiv = $("<h5>").html("Powerstats: " + info.powerstats)
+                    var identityDiv = $("<h5>").html("Real Name:<br><strong> " + info.biography["full-name"])
+                    var raceDiv = $("<h5>").html("Race:<br><strong> " + info.appearance.race)
+                    var heightDiv = $("<h5>").html("height:<br><strong> " + info.appearance.height[0])
+                    var weightDiv = $("<h5>").html("weight:<br><strong> " + info.appearance.weight[0])
+                    var residenceDiv = $("<h5>").html("Residence:<br><strong> " + info.work.base)
+                    var statsDiv = $("<h5>").html("Powerstats:<br><strong>Strength - " + info.powerstats.strength + "<br>Intelligence - " + info.powerstats.intelligence + "<br>Speed - " + info.powerstats.speed + "<br>Power - " + info.powerstats.power + "<br>Combat - " + info.powerstats.combat)
                     $(heroimg).attr("src", info.image.url);
                     $(heroimg).addClass("mw-100")
                     $("#facts").empty();
                     $("#facts").append(nameDiv, heroimg, identityDiv, raceDiv, heightDiv, weightDiv, residenceDiv, statsDiv);
+                    
                     console.log("NEW: " + next );
                     
                     $("#next").on("click", function () {
@@ -165,9 +198,12 @@
                     }
                     console.log(state)
                 });
+                var favorites = []
                 $(".favorite").click(function () {
+                    favorites.push($(this).parent().siblings());
+                    localStorage.setItem("favorites", JSON.stringify(favorites));
                     $(this).parent().siblings().clone().addClass("mh-100").appendTo("#favorites")
-                    console.log("favorites")
+                    console.log( $(this).parent())
                 });
             });
 
